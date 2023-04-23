@@ -1,25 +1,29 @@
 #!/usr/bin/python3
-
-"""This module contains the app instance for the AirBnB Web"""
-
+"""Starts a flask app
+    listens to 0.0.0.0:5000
+    
+"""
 from models import storage
-from models.state import State
-from flask import Flask, render_template
+from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
 
 
-@app.route('/states_list', strict_slashes=False)
+@app.route("/states_list", strict_slashes=False)
 def states_list():
-    """Runs HTML page with sorted list of states"""
-    states = storage.all(State)
-    return render_template('7-states_list.html', states=states)
+    """Displays an HTML page with a list of all State objects in DBStorage.
+    States are sorted by name.
+    """
+    states = storage.all("State")
+    return render_template("7-states_list.html", states=states)
 
 
 @app.teardown_appcontext
-def close_session(exception=None):
-    """ends SQL Alchemy current Session"""
+def teardown(exc):
+    """Remove the current SQLAlchemy session."""
     storage.close()
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
